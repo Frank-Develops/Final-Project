@@ -1,5 +1,8 @@
-require('dotenv/config');
+// require('dotenv/config');
+require('dotenv').config();
 const express = require('express');
+// added
+const port = process.env.PORT;
 const staticMiddleware = require('./static-middleware');
 const app = express();
 const argon2 = require('argon2');
@@ -17,9 +20,14 @@ const db = new pg.Pool({
 app.use(staticMiddleware);
 app.use(express.json());
 
-app.listen(process.env.PORT, () => {
+// app.listen(process.env.PORT, () => {
+//   // eslint-disable-next-line no-console
+//   console.log(`express server listening on port ${process.env.PORT}`);
+// });
+
+app.listen(port, () => {
   // eslint-disable-next-line no-console
-  console.log(`express server listening on port ${process.env.PORT}`);
+  console.log(`express server listening on port ${port}`);
 });
 
 app.post('/api/users/sign-up', (req, res, next) => {

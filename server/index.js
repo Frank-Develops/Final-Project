@@ -1,7 +1,5 @@
-// require('dotenv/config');
 require('dotenv').config();
 const express = require('express');
-// added
 const port = process.env.PORT;
 const staticMiddleware = require('./static-middleware');
 const app = express();
@@ -11,36 +9,15 @@ const ClientError = require('./client-error');
 const authorizationMiddleware = require('./authorization-middleware');
 const jwt = require('jsonwebtoken');
 const db = new pg.Pool({
-  // connectionString: port.DATABASE_URL,
-  // connectionString: process.env.DATABASE_URL,
-  // ssl: {
-  //   rejectUnauthorized: false
-  // }
   host: 'localhost',
   user: 'postgres',
   port: 5432,
   password: 'test',
   database: 'postgres'
 });
-// const db = new pg.Pool({
-//   // connectionString: port.DATABASE_URL,
-//   // ssl: {
-//   //   rejectUnauthorized: false
-//   // }
-//   host: 'localhost',
-//   user: 'postgres',
-//   port: 4000,
-//   password: 'test',
-//   database: 'postgres'
-// });
 
 app.use(staticMiddleware);
 app.use(express.json());
-
-// app.listen(process.env.PORT, () => {
-//   // eslint-disable-next-line no-console
-//   console.log(`express server listening on port ${process.env.PORT}`);
-// });
 
 app.listen(port, () => {
   // eslint-disable-next-line no-console

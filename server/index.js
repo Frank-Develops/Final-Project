@@ -11,11 +11,22 @@ const ClientError = require('./client-error');
 const authorizationMiddleware = require('./authorization-middleware');
 const jwt = require('jsonwebtoken');
 const db = new pg.Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: port.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
 });
+// const db = new pg.Pool({
+//   // connectionString: port.DATABASE_URL,
+//   // ssl: {
+//   //   rejectUnauthorized: false
+//   // }
+//   host: 'localhost',
+//   user: 'postgres',
+//   port: 4000,
+//   password: 'test',
+//   database: 'postgres'
+// });
 
 app.use(staticMiddleware);
 app.use(express.json());
@@ -31,6 +42,7 @@ app.listen(port, () => {
 });
 
 app.post('/api/users/sign-up', (req, res, next) => {
+
   const { username, password } = req.body;
   if (!username || !password) {
     throw new ClientError(400, 'username and password are required fields');

@@ -198,6 +198,39 @@ app.delete('/api/watchlist/:deleteId', (req, res) => {
     });
 });
 
+app.delete('/api/log/:deleteId', (req, res) => {
+  const deleteId = parseInt(req.params.deleteId, 10);
+  if (!Number.isInteger(deleteId) || deleteId <= 0) {
+    res.status(400).json({
+      error: '"deleteId" must be a positive integer'
+    });
+    return;
+  }
+  const sql = `
+    delete from "log"
+    where "logId" =  $1
+    returning *;
+  `;
+  const params = [deleteId];
+  db.query(sql, params)
+    .then(result => {
+      const deleteId = result.rows[0];
+      if (!deleteId) {
+        res.status(404).json({
+          error: `Cannot find item with "deleteId" ${deleteId}`
+        });
+      } else {
+        res.status(204).json(deleteId);
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({
+        error: 'An unexpected error occurred.'
+      });
+    });
+});
+
 app.post('/api/log', (req, res, next) => {
   const userId = req.user.userId;
   const { date, showName, episodeName, season, number, image, rating } = req.body;

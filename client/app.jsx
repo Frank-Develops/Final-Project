@@ -39,6 +39,7 @@ export default class App extends React.Component {
     this.networkErrorTryAgain = this.networkErrorTryAgain.bind(this);
     this.toggleCalling = this.toggleCalling.bind(this);
     this.closeMenu = this.closeMenu.bind(this);
+    this.deleteFromLog = this.deleteFromLog.bind(this);
   }
 
   componentDidUpdate() {
@@ -231,6 +232,35 @@ export default class App extends React.Component {
       });
   }
 
+  deleteFromLog(entry) {
+    this.setState({ calling: true });
+    const deleteId = parseInt(entry, 10);
+    fetch(`/api/log/${deleteId}`, {
+      method: 'DELETE',
+      // body: JSON.stringify(entry),
+      headers: {
+        'Content-type': 'application/json',
+        'X-Access-Token': localStorage.getItem('token')
+      }
+    })
+      .then(entry => {
+        this.setState({ calling: false });
+        let entryToDelete;
+        const log = this.state.log.slice();
+        for (let i = 0; i < log.length; i++) {
+          if (log[i].entryId === deleteId) {
+            entryToDelete = i;
+          }
+        }
+        log.splice(entryToDelete, 1);
+        this.setState({ log });
+      })
+      .catch(err => {
+        this.networkError();
+        console.error(err);
+      });
+  }
+
   saveToLog(entry) {
     this.setState({ calling: true });
     fetch('/api/log', {
@@ -246,34 +276,6 @@ export default class App extends React.Component {
         this.setState({ calling: false });
         let log = this.state.log;
         log = this.state.log.concat(episode);
-        this.setState({ log });
-      })
-      .catch(err => {
-        this.networkError();
-        console.error(err);
-      });
-  }
-
-  deleteFromLog(entry) {
-    this.setState({ calling: true });
-    const deleteId = parseInt(entry, 10);
-    fetch(`/api/log/${deleteId}`, {
-      method: 'DELETE',
-      body: JSON.stringify(entry),
-      headers: {
-        'X-Access-Token': localStorage.getItem('token')
-      }
-    })
-      .then(entry => {
-        this.setState({ calling: false });
-        let entryToDelete;
-        const log = this.state.log.slice();
-        for (let i = 0; i < log.length; i++) {
-          if (log[i].entryId === deleteId) {
-            entryToDelete = i;
-          }
-        }
-        log.splice(entryToDelete, 1);
         this.setState({ log });
       })
       .catch(err => {
@@ -395,7 +397,7 @@ export default class App extends React.Component {
         <Diary menu={this.openMenu} setSearchResults={this.setSearchResults} searchResults={this.state.searchResults} menuOpen={this.state.menuOpen === false} goHome={this.goHome} openWatchlist={this.openWatchlist}
           isWatchlistOpen={this.state.watchlistOpen} watchlist={this.state.watchlist} deleteFromWatchlist={this.deleteFromWatchlist} saveToLog={this.saveToLog} openLog={this.openLog} log={this.state.log}
           user={this.state.user} noResults={this.noResults} networkErrorState={this.state.networkError} tryAgain={this.networkErrorTryAgain} toggleCalling={this.toggleCalling}
-          calling={this.state.calling} networkError={this.networkError} closeMenu={this.closeMenu} />
+          calling={this.state.calling} networkError={this.networkError} closeMenu={this.closeMenu} deleteFromLog={this.deleteFromLog} />
         <AppDrawer menu={this.openMenu} menuOpen={this.state.menuOpen} openWatchlist={this.openWatchlist} goHome={this.goHome} openLog={this.openLog} signUp={this.goToSignUp}
           signIn={this.goToSignIn} user={this.state.user} signOut={this.signOut} />;
       </div>;

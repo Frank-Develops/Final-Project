@@ -10,6 +10,7 @@ class Diary extends React.Component {
     super(props);
     this.state = { openModal: false, episodeToDelete: null, logModalOpen: false, episodeToLog: null };
     this.openModal = this.openModal.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
 
   }
 
@@ -25,7 +26,7 @@ class Diary extends React.Component {
           <ul className="watch-episode-title" value={episode['episode name']} > S{episode.season}E{episode.number} {episode['episode name']} </ul>
         </div>
         <div className="diary-rating">
-          <button onClick={this.openModal} disabled={this.props.calling === true} id={episode.entryId} className="watchlist-delete-button" type="submit">Delete</button>
+          <button onClick={this.openModal} disabled={this.props.calling === true} id={episode.logId} className="watchlist-delete-button" type="submit">Delete</button>
           <ul className="log-date"> {episode.date}  </ul>
           <ReactStars className="stars-mini" count={5} size={20} color2={'#ffd700'} value={Number(episode.rating)} edit={false} />
           <ReactStars className="stars-mobile" count={5} size={25} color2={'#ffd700'} value={Number(episode.rating)} edit={false} />
@@ -56,6 +57,10 @@ class Diary extends React.Component {
           {this.props.log.length === 0 & this.props.user !== null &&
             <h2 className="main-header header-text"> Your Have No Diary Entries</h2>
           }
+           {this.state.openModal === true &&
+            <DeleteModal episodeToDelete={this.state.episodeToDelete} deleteFromWatchlist={this.props.deleteFromWatchlist} openModal={this.props.openModal}
+              toggleModal={this.toggleModal} deleteDiary = 'true' deleteFromLog={this.props.deleteFromLog} />
+          }
           <ul className="list-results"> {diaryToRender} </ul>
         </div>;
       </main>
@@ -67,8 +72,18 @@ class Diary extends React.Component {
 
   openModal(event) {
     const deleteId = event.target.getAttribute('id');
+    console.log(deleteId);
     this.setState({ openModal: true });
     this.setState({ episodeToDelete: deleteId });
+  }
+
+  toggleModal() {
+    if (this.state.openModal === true) {
+      this.setState({ openModal: false });
+      this.setState({ episodeToDelete: null });
+    } else {
+      this.setState({ openModal: true });
+    }
   }
 }
 

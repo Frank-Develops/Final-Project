@@ -237,18 +237,17 @@ export default class App extends React.Component {
     const deleteId = parseInt(entry, 10);
     fetch(`/api/log/${deleteId}`, {
       method: 'DELETE',
-      // body: JSON.stringify(entry),
+      body: JSON.stringify(entry),
       headers: {
-        'Content-type': 'application/json',
         'X-Access-Token': localStorage.getItem('token')
       }
     })
       .then(entry => {
         this.setState({ calling: false });
         let entryToDelete;
-        const log = this.state.log.slice();
+        const log = this.state.log;
         for (let i = 0; i < log.length; i++) {
-          if (log[i].entryId === deleteId) {
+          if (log[i].logId === deleteId) {
             entryToDelete = i;
           }
         }

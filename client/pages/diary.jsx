@@ -72,7 +72,6 @@ class Diary extends React.Component {
 
   openModal(event) {
     const deleteId = event.target.getAttribute('id');
-    console.log(deleteId);
     this.setState({ openModal: true });
     this.setState({ episodeToDelete: deleteId });
   }

@@ -57,9 +57,9 @@ class Diary extends React.Component {
           {this.props.log.length === 0 & this.props.user !== null &&
             <h2 className="main-header header-text"> Your Have No Diary Entries</h2>
           }
-           {this.state.openModal === true &&
+          {this.state.openModal === true &&
             <DeleteModal episodeToDelete={this.state.episodeToDelete} deleteFromWatchlist={this.props.deleteFromWatchlist} openModal={this.props.openModal}
-              toggleModal={this.toggleModal} deleteDiary = 'true' deleteFromLog={this.props.deleteFromLog} />
+              toggleModal={this.toggleModal} deleteDiary='true' deleteFromLog={this.props.deleteFromLog} />
           }
           <ul className="list-results"> {diaryToRender} </ul>
         </div>;
